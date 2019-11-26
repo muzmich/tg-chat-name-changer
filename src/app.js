@@ -7,13 +7,17 @@ const bot = new Telegraf(process.env.BOT_TOKEN);
 let intervals = {};
 bot.command('start', ctx => {
     intervals[ctx.chat.id] = setInterval(async function () {
-        bot.telegram.setChatTitle(ctx.chat.id, await generateName());
+        const newName = await generateName();
+        console.log(`New name for chat ${ctx.chat.id} - ${newName}`)
+        bot.telegram.setChatTitle(ctx.chat.id, newName);
     }, 10 * 1000);
+    console.log(`Changing for chat ${ctx.chat.id} started`)
     return ctx.reply('Ууу сук, ща как буду раз в час имена менять');
 });
 
 bot.command('stop', ctx => {
     clearInterval(intervals[ctx.chat.id]);
+    console.log(`Changing for chat ${ctx.chat.id} stopped`)
     return ctx.reply('Всё, больше не буду');
 });
 
