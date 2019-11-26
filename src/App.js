@@ -1,5 +1,6 @@
 const Telegraf = require('telegraf');
 const generateName = require('./components/generateName');
+const express = require('express');
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
@@ -17,3 +18,4 @@ bot.command('stop', ctx => {
 });
 
 bot.launch().then(() => console.log('Bot is up'));
+express().listen(process.env.PORT || 3000);
