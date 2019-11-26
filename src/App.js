@@ -1,7 +1,7 @@
 const Telegraf = require('telegraf');
 const generateName = require('./components/generateName');
-const config = require('./config');
-const bot = new Telegraf(config.bot_token);
+
+const bot = new Telegraf(process.env.BOT_TOKEN);
 
 let intervals = {};
 bot.command('start', ctx => {
