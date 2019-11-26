@@ -16,4 +16,4 @@ bot.command('stop', ctx => {
     return ctx.reply('Всё, больше не буду');
 });
 
-bot.launch();
+bot.launch().then(() => console.log('Bot is up'));
