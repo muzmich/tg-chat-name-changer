@@ -21,9 +21,8 @@
     "az": "^0.2.3",
     "request-promise": "^4.2.5",
     "telegraf": "^3.33.3",
-    "utf8": "^3.0.0"
-  },
-  "devDependencies": {
+    "utf8": "^3.0.0",
     "request": "^2.88.0"
-  }
+  },
+  "devDependencies": {}
 }
