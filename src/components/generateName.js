@@ -24,7 +24,7 @@ async function generateWords() {
 module.exports = async function () {
     return new Promise((resolve, reject) => {
         generateWords().then((res) => {
-            Az.Morph.init('../node_modules/az/dicts', function () {
+            Az.Morph.init('node_modules/az/dicts', function () {
 
                 let wordMap = {
                     'Nouns': {'neut': [], 'femn': [], 'masc': [],},
