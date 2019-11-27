@@ -22,9 +22,9 @@ async function generateWords() {
 
 
 module.exports = async function () {
-    return new Promise(resolve => {
+    return new Promise((resolve, reject) => {
         generateWords().then((res) => {
-            Az.Morph.init('node_modules/az/dicts', function () {
+            Az.Morph.init('../node_modules/az/dicts', function () {
 
                 let wordMap = {
                     'Nouns': {'neut': [], 'femn': [], 'masc': [],},
@@ -32,7 +32,12 @@ module.exports = async function () {
                 };
 
                 res.forEach(word => {
-                    let parse = Az.Morph(word)[0].tag.toString();
+                    let parse;
+                    try {
+                        parse = Az.Morph(word)[0].tag.toString();
+                    } catch (e) {
+                        return reject(e);
+                    }
                     ['masc', 'femn', 'neut'].forEach(sex => {
                         if (parse.includes(sex) && parse.includes('NOUN')) {
                             wordMap['Nouns'][sex].push(word);

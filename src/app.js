@@ -12,24 +12,39 @@ let intervals = {},
     chats = {};
 
 async function changeTitle(ctx) {
-    const newName = await generateName();
-    console.log(`[${ctx.chat.id}] New name: ${newName}`);
-    bot.telegram.setChatTitle(ctx.chat.id, newName);
+    try {
+        const newName = await generateName();
+        console.log(`[${ctx.chat.id}] New name: ${newName}`);
+        await bot.telegram.setChatTitle(ctx.chat.id, newName);
+
+        if (!chats[ctx.chat.id.toString()]) chats[ctx.chat.id] = ctx.chat;
+    } catch (e) {
+        await bot.telegram.sendMessage('-395013027', e.message)
+    }
 }
 
-bot.command('start', ctx => {
-    intervals[ctx.chat.id] = setInterval(() => changeTitle(ctx), 12 * 60 * 60 * 1000);
-    if (!chats[ctx.chat.id.toString()])
-        chats[ctx.chat.id] = ctx.chat;
+bot.command('start', async (ctx) => {
+    if (intervals[ctx.chat.id] !== undefined) {
+        await ctx.reply('Уже запущен.');
+        return;
+    }
 
-    ctx.reply('Ууу сук, ща как буду раз в 12 часов имена менять').then(changeTitle(ctx));
+    intervals[ctx.chat.id] = setInterval(async () => await changeTitle(ctx), 12 * 60 * 60 * 1000);
+
+    await ctx.reply('Ща как буду раз в 12 часов имена менять');
+    await changeTitle(ctx);
     console.log(`[${ctx.chat.id}] Started`);
 });
 
-bot.command('stop', ctx => {
+bot.command('stop', async (ctx) => {
     clearInterval(intervals[ctx.chat.id]);
     console.log(`[${ctx.chat.id}] Stopped`);
-    return ctx.reply('Всё, больше не буду');
+    await ctx.reply('Всё, больше не буду');
+});
+
+bot.command('rename', async (ctx) => {
+    await changeTitle(ctx);
+    console.log(`[${ctx.chat.id}] Renamed`);
 });
 
 rest.get('/chats', (req, res) => {
